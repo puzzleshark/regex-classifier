@@ -10,19 +10,19 @@ class LetterClassifier(object):
 
     def __init__(self, class_name):
         self.class_name = class_name
-        self.__regs = []
+        self._regs = []
 
     def add_reg(self, reg, score):
-        self.__regs.append((reg, score))
+        self._regs.append((reg, score))
 
     def score_letter(self, letter):
-        score, matches = self.__score_letter(letter)
+        score, matches = self._score_letter(letter)
         return score
 
-    def __score_letter(self, letter):
+    def _score_letter(self, letter):
         current_score = 0
         matches = []
-        for reg, score in self.__regs:
+        for reg, score in self._regs:
             match = re.search(reg, letter)
             if match:
                 current_score += score
@@ -33,7 +33,7 @@ class LetterClassifier(object):
         failures = []
         for i, letter in enumerate(letters):
             label = labels
-            score, matches = self.__score_letter(letter)
+            score, matches = self._score_letter(letter)
             if score > 0 != label:
                 failures.append({'patient_id':patient_ids[i], 'letter':letter, 'label':label, 'score':score, 'matches':matches})
 

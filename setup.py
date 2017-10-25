@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from distutils.core import setup
 
 setup(name='hospital-regex-classifer',
@@ -7,5 +5,5 @@ setup(name='hospital-regex-classifer',
       description='Tools for simple information extraction of doctor-patient notes',
       author='Sam Banning',
       author_email='samcbanning@gmail.com',
-      packages=['jinja2'],
+      install_requires=['jinja2']
 )
