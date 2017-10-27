@@ -27,7 +27,7 @@
         </div>
         <div>
             <h3>Letter Text</h3>
-            <p>{{ current_failure['letter'] }}</p>
+            <p>{{ current_failure['letter'].replace('\n', '<br>') }}</p>
             <div>
                 <h3>Final Score</h3>
                 <p>{{ current_failure['score'] }}</p>
@@ -37,7 +37,12 @@
                 <ul>
                     {% for match in current_failure['matches'] %}
                     <li>
-                        {{ match }}
+                        <div>
+                            <h4>Score</h4>
+                            {{ match[1] }}
+                            <h4>Match</h4>
+                            {{ match[0].group(0) }}
+                        </div>
                     </li>
                     {% endfor %}
                 </ul>

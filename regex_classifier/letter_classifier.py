@@ -2,7 +2,7 @@ import re
 import os
 from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
 env = Environment(
-    loader=FileSystemLoader('templates')
+    loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates'))
 )
 
 
@@ -34,7 +34,7 @@ class LetterClassifier(object):
         for i, letter in enumerate(letters):
             label = labels
             score, matches = self._score_letter(letter)
-            if score > 0 != label:
+            if score > 0 != label[i]:
                 failures.append({'patient_id':patient_ids[i], 'letter':letter, 'label':label, 'score':score, 'matches':matches})
 
         template = env.get_template('report.html')
