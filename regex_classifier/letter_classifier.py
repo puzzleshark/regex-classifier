@@ -56,6 +56,12 @@ class LetterClassifier(object):
             output = template.render(failures=failures, current_failure=failure)
             with open(os.path.join(output_folder, "failure{}.html".format(i+1)), "w") as fh:
                 fh.write(output)
+        # print out statistics
+        print('Got {:num_correct} out of {:num_total} ({:percent}%)'.format(
+            num_correct=len(patient_ids)-len(failures),
+            num_total=len(patient_ids),
+            percent=((len(patient_ids)-len(failures))/len(patient_ids))*100
+        ))
 
 
 if __name__ == '__main__':
