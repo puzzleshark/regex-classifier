@@ -11,6 +11,7 @@ class LetterClassifier(object):
     def __init__(self, class_name):
         self.class_name = class_name
         self._regs = []
+        self.bias = 0
 
     def add_reg(self, reg, score):
         """
@@ -26,7 +27,7 @@ class LetterClassifier(object):
         return score
 
     def _score_letter(self, letter):
-        current_score = 0
+        current_score = self.bias
         matches = []
         for reg, score in self._regs:
             match = reg.search(letter)
@@ -34,6 +35,9 @@ class LetterClassifier(object):
                 current_score += score
                 matches.append((match, score))
         return current_score, matches
+
+    def add_bias(self, score):
+        self.bias = score
 
     def generate_report(self, patient_ids, letters, labels, output_folder='.'):
         failures = []
@@ -57,7 +61,7 @@ class LetterClassifier(object):
             with open(os.path.join(output_folder, "failure{}.html".format(i+1)), "w") as fh:
                 fh.write(output)
         # print out statistics
-        print('Got {:num_correct} out of {:num_total} ({:percent}%)'.format(
+        print('Got {num_correct} out of {num_total} ({percent}%)'.format(
             num_correct=len(patient_ids)-len(failures),
             num_total=len(patient_ids),
             percent=((len(patient_ids)-len(failures))/len(patient_ids))*100
