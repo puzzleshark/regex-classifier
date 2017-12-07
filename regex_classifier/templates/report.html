@@ -27,7 +27,9 @@
         </div>
         <div>
             <h3>Letter Text</h3>
-            <p>{{ current_failure['letter'].replace('\n', '<br>') }}</p>
+            <p>
+                {{ current_failure['highlight_letter'](current_failure['letter']).replace('\n', '<br>') }}
+            </p>
             <div>
                 <h3>Final Score</h3>
                 <p>{{ current_failure['score'] }}</p>

@@ -12,6 +12,7 @@ class LetterClassifier(object):
         self.class_name = class_name
         self._regs = []
         self.bias = 0
+        self._highlights = ['#ffb7b7', '#B2ABFF', '#fff2a8', '#a8d1ff', '#78e3a5']
 
     def add_reg(self, reg, score):
         """
@@ -30,7 +31,7 @@ class LetterClassifier(object):
         current_score = self.bias
         matches = []
         for reg, score in self._regs:
-            match = reg.search(letter)
+            match = re.search(reg, letter)
             if match:
                 current_score += score
                 matches.append((match, score))
@@ -39,13 +40,27 @@ class LetterClassifier(object):
     def add_bias(self, score):
         self.bias = score
 
+    def highlight_matches(self, letter):
+        """
+        Add HTML span elements for highlighting to matched text in letter
+        :param letter: string object
+        :return: string object with HTML elements
+        """
+        def replace_match(matchobj):
+            return '<span style="background-color:{}">'.format(self._highlights[i % len(self._highlights)]) \
+                   + matchobj.group(0) + '</span>'
+
+        for i, reg in enumerate(self._regs):
+                letter = re.subn(reg[0], replace_match, letter)[0]
+        return letter
+
     def generate_report(self, patient_ids, letters, labels, output_folder='.'):
         failures = []
         for i, letter in enumerate(letters):
             label = labels[i]
             score, matches = self._score_letter(letter)
             if (score > 0) != label:
-                failures.append({'patient_id':patient_ids[i], 'letter':letter, 'label':label, 'score':score, 'matches':matches})
+                failures.append({'patient_id':patient_ids[i], 'letter':letter, 'label':label, 'score':score, 'matches':matches, 'highlight_letter': self.highlight_matches})
 
         template = env.get_template('report.html')
         if not os.path.isdir(output_folder):
@@ -76,4 +91,4 @@ if __name__ == '__main__':
     test.add_reg('sad', -5)
 
     #print(test.score_letter("I am so excited, I can't sleep!"))
-    test.generate_report([45, 34], ['I am so excited', 'so unhappy'], [False, False])
+    test.generate_report([45, 34], ['I am so excited, very excited', 'so unhappy'], [False, False])
