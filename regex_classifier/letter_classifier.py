@@ -60,7 +60,7 @@ class LetterClassifier(object):
             label = labels[i]
             score, matches = self._score_letter(letter)
             if (score > 0) != label:
-                failures.append({'patient_id':patient_ids[i], 'letter':letter, 'label':label, 'score':score, 'matches':matches, 'highlight_letter': self.highlight_matches})
+                failures.append({'patient_id':patient_ids[i], 'letter':letter, 'label':label, 'score':score, 'matches':matches})
 
         template = env.get_template('report.html')
         if not os.path.isdir(output_folder):
@@ -72,7 +72,7 @@ class LetterClassifier(object):
                     os.remove(os.path.join(output_folder, filename))
         # generate the new report
         for i, failure in enumerate(failures):
-            output = template.render(failures=failures, current_failure=failure)
+            output = template.render(failures=failures, current_failure=failure, highlight_matches=self.highlight_matches)
             with open(os.path.join(output_folder, "failure{}.html".format(i+1)), "w") as fh:
                 fh.write(output)
         # print out statistics
